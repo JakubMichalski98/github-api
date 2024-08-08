@@ -38,13 +38,13 @@ class RepositoryClientImpl(
                 }
         } catch (e: HttpClientErrorException.NotFound) {
             logger.error("User not found: $username")
-            emptyList()
+            throw e
         } catch (e: RestClientException) {
             logger.error("Error fetching data from GitHub API: ${e.message}")
-            emptyList()
+            throw e
         } catch (e: Exception) {
             logger.error("Unexpected error: ${e.message}")
-            emptyList()
+            throw e
         }
     }
 
