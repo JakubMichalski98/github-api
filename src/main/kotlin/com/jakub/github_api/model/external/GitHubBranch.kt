@@ -1,4 +1,4 @@
-package com.jakub.github_api.model
+package com.jakub.github_api.model.external
 
 data class GitHubBranch(
     val name: String,

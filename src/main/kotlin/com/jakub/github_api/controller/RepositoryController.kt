@@ -1,7 +1,8 @@
 package com.jakub.github_api.controller
 
 import com.jakub.github_api.client.RepositoryClientImpl
-import com.jakub.github_api.model.GitHubRepository
+import com.jakub.github_api.model.external.GitHubRepository
+import com.jakub.github_api.model.response.UserRepositoryResponse
 import com.jakub.github_api.service.RepositoryService
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
@@ -33,7 +34,7 @@ class RepositoryController(
         }
 
         return try {
-            val repositories: List<GitHubRepository> = repositoryService.getNonForkRepositoriesByUsername(username)
+            val repositories: List<UserRepositoryResponse> = repositoryService.getNonForkRepositoriesByUsername(username)
 
             if (repositories.isEmpty()) {
                 ResponseEntity.status(HttpStatus.OK).body(emptyList<GitHubRepository>())
