@@ -16,7 +16,7 @@ class RepositoryClientImpl(
 
     private val logger = LoggerFactory.getLogger(RepositoryClientImpl::class.java)
 
-    override fun getNonForkRepositoriesByUsername(username: String): List<GitHubRepository> {
+    override suspend fun getNonForkRepositoriesByUsername(username: String): List<GitHubRepository> {
         val endpoint = "/users/$username/repos"
 
         return try {
@@ -48,7 +48,7 @@ class RepositoryClientImpl(
         }
     }
 
-    override fun getRepositoryBranches(repoName: String, owner: String): List<GitHubBranch> {
+    override suspend fun getRepositoryBranches(repoName: String, owner: String): List<GitHubBranch> {
         val endpoint = "/repos/$owner/$repoName/branches"
 
         return try {

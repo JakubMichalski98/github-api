@@ -3,5 +3,5 @@ package com.jakub.github_api.service
 import com.jakub.github_api.model.GitHubRepository
 
 interface RepositoryService {
-    fun getNonForkRepositoriesByUsername(username: String) : List<GitHubRepository>
+    suspend fun getNonForkRepositoriesByUsername(username: String) : List<GitHubRepository>
 }

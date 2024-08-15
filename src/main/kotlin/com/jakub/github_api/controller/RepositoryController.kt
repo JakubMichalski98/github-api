@@ -22,7 +22,7 @@ class RepositoryController(
     private val logger = LoggerFactory.getLogger(RepositoryClientImpl::class.java)
 
     @GetMapping("/{username}")
-    fun getNonForkRepositoriesByUsername(
+    suspend fun getNonForkRepositoriesByUsername(
         @PathVariable username: String,
         @RequestHeader(HttpHeaders.ACCEPT) acceptHeader: String
     ): ResponseEntity<Any> {

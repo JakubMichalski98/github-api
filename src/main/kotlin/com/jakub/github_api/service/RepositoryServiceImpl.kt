@@ -15,7 +15,7 @@ class RepositoryServiceImpl(
 
     private val logger = LoggerFactory.getLogger(RepositoryClientImpl::class.java)
 
-    override fun getNonForkRepositoriesByUsername(username: String): List<GitHubRepository> {
+    override suspend fun getNonForkRepositoriesByUsername(username: String): List<GitHubRepository> {
         return try {
             repositoryClient.getNonForkRepositoriesByUsername(username)
         } catch (e: HttpClientErrorException.NotFound) {
