@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestClientException
+import org.springframework.web.reactive.function.client.WebClientResponseException
 
 @Component
 class RepositoryClientImpl(
@@ -20,11 +21,11 @@ class RepositoryClientImpl(
 
         return try {
             gitHubClient.get(endpoint, object : ParameterizedTypeReference<List<GitHubRepository>>() {})
-        } catch (e: HttpClientErrorException.NotFound) {
+        } catch (e: WebClientResponseException.NotFound) {
             logger.error("User not found: $username")
             throw e
-        } catch (e: RestClientException) {
-            logger.error("Error fetching data from GitHub API: ${e.message}")
+        } catch (e: WebClientResponseException) {
+            logger.error("Error fetching data from GitHub API at endpoint: $endpoint", e)
             throw e
         } catch (e: Exception) {
             logger.error("Unexpected error: ${e.message}")
@@ -37,15 +38,15 @@ class RepositoryClientImpl(
 
         return try {
             return gitHubClient.get(endpoint, object : ParameterizedTypeReference<List<GitHubBranch>>() {})
-        } catch (e: HttpClientErrorException.NotFound) {
+        } catch (e: WebClientResponseException.NotFound) {
             logger.error("Repository or branches not found: $owner/$repoName")
-            emptyList()
-        } catch (e: RestClientException) {
-            logger.error("Error fetching branches from GitHub API: ${e.message}")
-            emptyList()
+            throw e
+        } catch (e: WebClientResponseException) {
+            logger.error("Error fetching branches from GitHub API at endpoint: $endpoint", e)
+            throw e
         } catch (e: Exception) {
             logger.error("Unexpected error: ${e.message}")
-            emptyList()
+            throw e
         }
     }
 }

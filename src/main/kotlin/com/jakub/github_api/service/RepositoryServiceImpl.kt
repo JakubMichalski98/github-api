@@ -6,8 +6,8 @@ import com.jakub.github_api.model.response.BranchResponse
 import com.jakub.github_api.model.response.UserRepositoryResponse
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestClientException
+import org.springframework.web.reactive.function.client.WebClientResponseException
 
 @Service
 class RepositoryServiceImpl(
@@ -20,9 +20,11 @@ class RepositoryServiceImpl(
         return try {
            val repositories = repositoryClient.getRepositoriesByUsername(username)
 
-            val nonForkRepositories = repositories.filter {!it.fork}
+            if (repositories.isEmpty()) {
+                return emptyList()
+            }
 
-            nonForkRepositories.map { repo ->
+            repositories.filterNot { it.fork }.map { repo ->
                 val branches = repositoryClient.getRepositoryBranches( repo.name, repo.owner.login)
                 UserRepositoryResponse(
                     repositoryName = repo.name,
@@ -35,10 +37,10 @@ class RepositoryServiceImpl(
                     }
                 )
             }
-        } catch (e: HttpClientErrorException.NotFound) {
+        } catch (e: WebClientResponseException.NotFound) {
             logger.error("User not found: $username")
             throw e
-        } catch (e: RestClientException) {
+        } catch (e: WebClientResponseException) {
             logger.error("Error fetching data from GitHub API: ${e.message}", e)
             throw e
         } catch (e: Exception) {
