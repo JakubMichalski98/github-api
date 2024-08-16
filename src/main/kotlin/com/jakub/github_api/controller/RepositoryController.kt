@@ -1,10 +1,8 @@
 package com.jakub.github_api.controller
 
-import com.jakub.github_api.client.RepositoryClientImpl
 import com.jakub.github_api.exception.ErrorResponse
 import com.jakub.github_api.exception.GitHubNotFoundException
 import com.jakub.github_api.service.RepositoryService
-import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
