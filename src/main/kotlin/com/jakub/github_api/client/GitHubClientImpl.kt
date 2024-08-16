@@ -9,7 +9,6 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.client.WebClientResponseException
 import reactor.core.publisher.Mono
 
 @Component
@@ -27,7 +26,7 @@ class GitHubClientImpl(
                 response.bodyToMono(String::class.java)
                     .flatMap { body ->
                         val exception = when (response.statusCode()) {
-                            HttpStatus.NOT_FOUND -> GitHubNotFoundException("Resource not found: $body")
+                            HttpStatus.NOT_FOUND -> GitHubNotFoundException("Resource not found at endpoint $endpoint: $body")
                             else -> GitHubServerException("Error fetching from GitHub API: $body")
                         }
                         Mono.error(exception)
@@ -36,5 +35,4 @@ class GitHubClientImpl(
             .bodyToMono(responseType)
             .awaitSingle()
     }
-
 }
