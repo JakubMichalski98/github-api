@@ -20,6 +20,15 @@ class RepositoryController(
         @PathVariable username: String,
         @RequestHeader(HttpHeaders.ACCEPT) acceptHeader: String
     ): ResponseEntity<*> {
+
+        if (acceptHeader != "application/json") {
+            val errorResponse = ErrorResponse(
+                status = HttpStatus.BAD_REQUEST.value(),
+                message = "Invalid or missing Accept header, Expected: 'application/json'."
+            )
+            return ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST)
+        }
+
         return try {
             val repositories = repositoryService.getNonForkRepositoriesByUsername(username)
             ResponseEntity.ok(repositories)
