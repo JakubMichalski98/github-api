@@ -16,8 +16,6 @@ class RepositoryServiceImpl(
     private val repositoryClient: RepositoryClient
 ) : RepositoryService {
 
-    private val logger = LoggerFactory.getLogger(RepositoryClientImpl::class.java)
-
     override suspend fun getNonForkRepositoriesByUsername(username: String): List<UserRepositoryResponse> {
 
        val repositories = repositoryClient.getRepositoriesByUsername(username)
