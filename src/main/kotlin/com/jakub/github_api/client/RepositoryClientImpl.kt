@@ -1,5 +1,7 @@
 package com.jakub.github_api.client
 
+import com.jakub.github_api.exception.GitHubNotFoundException
+import com.jakub.github_api.exception.GitHubServerException
 import com.jakub.github_api.model.external.GitHubBranch
 import com.jakub.github_api.model.external.GitHubRepository
 import org.springframework.stereotype.Component
@@ -19,10 +21,10 @@ class RepositoryClientImpl(
 
         return try {
             gitHubClient.get(endpoint, object : ParameterizedTypeReference<List<GitHubRepository>>() {})
-        } catch (e: WebClientResponseException.NotFound) {
-            logger.error("User not found: $username")
+        } catch (e: GitHubNotFoundException) {
+            logger.error("User not found: $username", e)
             throw e
-        } catch (e: WebClientResponseException) {
+        } catch (e: GitHubServerException) {
             logger.error("Error fetching data from GitHub API at endpoint: $endpoint", e)
             throw e
         } catch (e: Exception) {

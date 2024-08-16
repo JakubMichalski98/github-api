@@ -2,6 +2,7 @@ package com.jakub.github_api.controller
 
 import com.jakub.github_api.client.RepositoryClientImpl
 import com.jakub.github_api.exception.ErrorResponse
+import com.jakub.github_api.exception.GitHubNotFoundException
 import com.jakub.github_api.service.RepositoryService
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
@@ -11,15 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.reactive.function.client.WebClientResponseException
 
 @RestController
 class RepositoryController(
     private val repositoryService: RepositoryService
 ) {
-
-    private val logger = LoggerFactory.getLogger(RepositoryClientImpl::class.java)
-
     @GetMapping("/{username}")
     suspend fun getNonForkRepositoriesByUsername(
         @PathVariable username: String,
@@ -28,7 +25,7 @@ class RepositoryController(
         return try {
             val repositories = repositoryService.getNonForkRepositoriesByUsername(username)
             ResponseEntity.ok(repositories)
-        } catch (e: WebClientResponseException.NotFound) {
+        } catch (e: GitHubNotFoundException) {
             val errorResponse = ErrorResponse(
                 status = HttpStatus.NOT_FOUND.value(),
                 message = "User with username $username not found"
