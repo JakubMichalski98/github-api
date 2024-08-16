@@ -22,7 +22,7 @@ class GitHubClientImpl(
             .uri(endpoint)
             .header(HttpHeaders.ACCEPT, "application/json")
             .retrieve()
-            .onStatus({ status -> status.is4xxClientError }) { response ->
+            .onStatus({ status -> status.is4xxClientError || status.is5xxServerError }) { response ->
                 response.bodyToMono(String::class.java)
                     .flatMap { body ->
                         val exception = when (response.statusCode()) {
