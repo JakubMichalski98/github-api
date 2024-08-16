@@ -5,8 +5,6 @@ import com.jakub.github_api.model.external.GitHubRepository
 import org.springframework.stereotype.Component
 import org.slf4j.LoggerFactory
 import org.springframework.core.ParameterizedTypeReference
-import org.springframework.web.client.HttpClientErrorException
-import org.springframework.web.client.RestClientException
 import org.springframework.web.reactive.function.client.WebClientResponseException
 
 @Component
@@ -37,7 +35,7 @@ class RepositoryClientImpl(
         val endpoint = "/repos/$owner/$repoName/branches"
 
         return try {
-            return gitHubClient.get(endpoint, object : ParameterizedTypeReference<List<GitHubBranch>>() {})
+            gitHubClient.get(endpoint, object : ParameterizedTypeReference<List<GitHubBranch>>() {})
         } catch (e: WebClientResponseException.NotFound) {
             logger.error("Repository or branches not found: $owner/$repoName")
             throw e
